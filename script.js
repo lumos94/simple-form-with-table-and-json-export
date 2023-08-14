@@ -1,6 +1,9 @@
 const form = document.querySelector('#info-form');
 const table = document.querySelector('#dataTable');
 const exportButton = document.getElementById('exportJson');
+const jsonDataContainer = document.getElementById('jsonDataContainer');
+const verificationModal = document.getElementById('verification-modal');
+const jsonDataModal = document.getElementById('json-data-modal');
 const checkboxes = document.querySelectorAll(
     'input[type="checkbox"]',
 );
@@ -16,8 +19,10 @@ let rowDeletion;
 
 addRemoveNoDataWarning();
 
+//submit form
 form.addEventListener('submit', event => {
     event.preventDefault();
+    validationMessage.innerHTML = "";
 
     let fname = document.querySelector('#first-name').value;
     let lname = document.querySelector('#last-name').value;
@@ -47,6 +52,7 @@ form.addEventListener('submit', event => {
 
     addRemoveNoDataWarning();
 
+    //create jsondata obj for printing on screen
     let formData = {
         id: dataId,
         fname: fname,
@@ -86,8 +92,10 @@ form.addEventListener('submit', event => {
     dataId++;
 });
 
+//event listener for opening json data modal and adding the data
 exportButton.addEventListener('click', event => {
-    document.getElementById('jsonDataContainer').innerHTML = JSON.stringify(jsonData,null, 2);
+    toggleJsonModal();
+    jsonDataContainer.innerHTML = JSON.stringify(jsonData, null, 2);
 });
 
 // check if at least one checkbox is checked
@@ -145,7 +153,7 @@ function deleteRow() {
 }
 
 function updateJsonDataObject(id) {
-    jsonData = jsonData.filter((object) => object.id !== id);
+    jsonData = jsonData.filter((object) => object.id !== parseInt(id));
 }
 
 function getIDFromElement(element) {
@@ -153,15 +161,16 @@ function getIDFromElement(element) {
     return elemArr[1];
 }
 
+
 function toggleModal(row) {
-    document.getElementById('verification-modal').classList.toggle('hidden');
+    verificationModal.classList.toggle('hidden');
     if (row) {
         rowDeletion = row;
     }
 }
 
 function toggleJsonModal() {
-    document.getElementById('json-data-modal').classList.toggle('hidden');
+    jsonDataModal.classList.toggle('hidden');
 }
 
 function toggleExportButton(disabled) {
